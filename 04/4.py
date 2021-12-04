@@ -81,31 +81,66 @@ def calculate_winning_value(card_list_of_lists, numbers_called_list, last_digit_
     for unmarked_value in unmarked:
         total += int(unmarked_value)
         
-    print(total * int(last_digit_called))
+    calulation = total * int(last_digit_called)
 
-    return 0
+    return calulation
 
 
 def main():
     winner = False
     data, numbers_to_call = setup()
 
+    cards_which_have_not_won = [iter for iter in range(99)]
+
     numbers_called = []
+    print(data[44])
+    last_card = -1
     for number in numbers_to_call:
         winner = False
 
         numbers_called.append(number)
-        for card_list_of_lists in data:
-
+      
+        for idx, card_list_of_lists in enumerate(data):
+            
             vertical_winner_result = vertical_winner(card_list_of_lists, numbers_called)
             horizontal_winner_result = horizontal_winner(card_list_of_lists, numbers_called)
 
-            # if vertical_winner_result == True:
             if vertical_winner_result == True or horizontal_winner_result == True:
                 winner = True
 
             if winner == True:
-                calculate_winning_value(card_list_of_lists, numbers_called, number)
+                # uncomment for part one winner
+                # calulation  = calculate_winning_value(card_list_of_lists, numbers_called, number)
                 winner = False
                 
+                if idx in cards_which_have_not_won:
+                    
+                    cards_which_have_not_won.remove(idx)
+                    
+                    if len(cards_which_have_not_won) == 1:
+                        print(cards_which_have_not_won)
+                        print('here')
+                        last_card_idx = cards_which_have_not_won[0]
+                        last_card = data[last_card_idx]
+                        print(cards_which_have_not_won)
+                        # calulation  = calculate_winning_value(card_list_of_lists, numbers_called, number)
+
+                        # print(calulation)
+        
+
+    numbers_called_final = []
+    print(last_card)
+    for number in numbers_to_call:
+        winner_final = False
+
+        numbers_called_final.append(number)
+        vertical_winner_result = vertical_winner(last_card, numbers_called_final)
+        horizontal_winner_result = horizontal_winner(last_card, numbers_called_final)
+        if vertical_winner_result == True or horizontal_winner_result == True:
+            winner_final = True
+
+        if winner_final == True:
+            calulation  = calculate_winning_value(last_card, numbers_called_final, number)
+            print(calulation)
+            break
 main()
